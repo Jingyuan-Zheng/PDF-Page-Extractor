@@ -1,0 +1,13 @@
+name: Build and verify
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  macos:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python3 build_app.py
+      - run: python3 Tests/smoke_test.py
+      - run: codesign --verify --strict 'dist/PDF Page Extractor.app'
