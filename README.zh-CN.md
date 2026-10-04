@@ -8,7 +8,7 @@
 
 从 [Releases](https://github.com/Jingyuan-Zheng/PDF-Page-Extractor/releases) 下载压缩包，解压后把 **PDF Page Extractor.app** 放入 `/Applications`。
 
-- 需要 macOS 13 或更新系统。Apple 芯片选择 `arm64`，Intel 选择 `x86_64`。
+- 下载包需要 macOS 13 或更新系统及 Apple 芯片。Intel 用户可以用 `python3 build_app.py --arch x86_64` 自行构建。
 - 应用采用临时签名，未经 Apple 公证。首次运行可能需要在“系统设置 → 隐私与安全性”中允许打开。
 - 这是 Finder／命令行辅助工具，没有 Dock 图标、独立菜单栏或 About 窗口。直接双击而不传入 PDF，会提示未提供文件。
 
@@ -22,15 +22,16 @@ open -n "/Applications/PDF Page Extractor.app" --args "/path/to/document.pdf"
 
 默认勾选 **Export to Folder**，会在 PDF 旁新建输出文件夹；取消后直接保存到 PDF 所在目录。遇到同名输出会自动添加 `_2`、`_3` 等后缀，不修改原 PDF。需要对 PDF 所在目录有写入权限。图片背景为白色，分辨率固定为 200 DPI。目前界面为英文。
 
-## 可选：Finder 快速操作
+## 配套 Finder 快速操作
 
-打开 Automator，新建“快速操作”，设置为在 Finder 接收 PDF 文件；添加“运行 Shell 脚本”，选择 `/bin/zsh`，将传递输入设为“作为自变量”，粘贴：
+从 Releases 下载 **PDF-Page-Extractor-Workflows.zip**。先将应用放入 `/Applications` 或 `~/Applications`，再双击解压后的 workflow，通过 Automator 安装：
 
-```sh
-/usr/bin/open -n "/Applications/PDF Page Extractor.app" --args "$@"
-```
+- **Extract Page to Image...**：将选定 PDF 传入应用，预览并选择页面。
+- **Extract PDF as Images**：将每个选定 PDF 的全部页面导出为 200 DPI PNG，保存在 PDF 旁的新文件夹。脚本内嵌在 workflow 中，需要 Poppler，可用 `brew install poppler` 安装。交互式应用本身无需 Poppler。
 
-保存为 **Extract Page to Image**，即可通过 Finder 的快速操作／服务调用；必要时在系统设置启用该服务。
+在 Finder 选中 PDF 后，通过“快速操作／服务”调用；必要时在系统设置中启用。若已有同名服务，选择替换前请先备份。
+
+仓库包含 workflow 文件和可编辑的生成器。修改脚本后运行 `python3 build_workflows.py` 重新生成，不依赖作者本机的安装路径。
 
 ## 从源码构建
 

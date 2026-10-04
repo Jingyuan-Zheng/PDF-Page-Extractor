@@ -10,4 +10,6 @@ jobs:
           python-version: '3.x'
       - run: python3 build_app.py
       - run: python3 Tests/smoke_test.py
+      - run: python3 build_workflows.py
+      - run: zsh -n scripts/pdf_extract_all_pages.sh
       - run: codesign --verify --strict 'dist/PDF Page Extractor.app'

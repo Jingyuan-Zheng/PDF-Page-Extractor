@@ -8,7 +8,7 @@ A small native macOS helper for previewing PDF files and exporting selected page
 
 Download the ZIP for your Mac from [Releases](https://github.com/Jingyuan-Zheng/PDF-Page-Extractor/releases), unzip it, and move **PDF Page Extractor.app** to `/Applications`.
 
-- Requires macOS 13 or newer. Choose `arm64` for Apple silicon or `x86_64` for Intel.
+- Requires macOS 13 or newer and Apple silicon for the downloadable app. Intel users can build from source with `python3 build_app.py --arch x86_64`.
 - Release builds are ad-hoc signed and are not notarized. macOS may require approval in System Settings → Privacy & Security when first opened.
 - This is a Finder/command-line helper without a Dock icon, menu bar, or About window. Double-clicking it without PDF arguments displays “No PDF file was provided.”
 
@@ -22,15 +22,16 @@ Select thumbnails with Command/Shift, or enter page numbers and ranges such as `
 
 **Export to Folder** creates a new folder beside the source PDF. Turn it off to write PNGs beside the PDF instead. Existing output names receive `_2`, `_3`, and later suffixes; source PDFs are unchanged. You need write permission in the PDF’s parent folder. Export uses a white background and a fixed 200 DPI resolution. The UI is currently English.
 
-## Optional Finder Quick Action
+## Companion Finder Quick Actions
 
-Open Automator, create a **Quick Action**, set “Workflow receives current” to **PDF files** in **Finder**, add **Run Shell Script**, choose `/bin/zsh`, and set “Pass input” to **as arguments**. Paste:
+Download **PDF-Page-Extractor-Workflows.zip** from Releases. Install the app in `/Applications` (or `~/Applications`), then double-click the included workflows to install them through Automator:
 
-```sh
-/usr/bin/open -n "/Applications/PDF Page Extractor.app" --args "$@"
-```
+- **Extract Page to Image...** opens the app with selected PDFs for interactive page selection.
+- **Extract PDF as Images** exports every page of each selected PDF as 200 DPI PNG into a new sibling folder. This workflow embeds the included shell script and requires [Poppler](https://poppler.freedesktop.org/), available with `brew install poppler`. The interactive app does not require Poppler.
 
-Save as **Extract Page to Image**. It appears in Finder’s Quick Actions/Services; enable it in System Settings if necessary.
+Finder → select PDF files → Quick Actions/Services. Enable the services in System Settings if needed. If you already have Quick Actions with these names, back them up before choosing to replace them.
+
+Workflow bundles and their editable generator are included in this repository. Regenerate after changing the shell script with `python3 build_workflows.py`. The generator contains no machine-specific installation path.
 
 ## Build from source
 
